@@ -3,6 +3,7 @@ Configuration settings for the Hotel Agent System.
 Contains API keys, thresholds, and other constants.
 """
 
+import streamlit as st
 from pydantic_settings import BaseSettings
 from typing import Dict
 import os
@@ -13,18 +14,19 @@ load_dotenv()
 
 class Settings(BaseSettings):
     # API Keys
-    OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
-    OPENSEARCH_HOST: str = os.getenv("OPENSEARCH_HOST", "")
-    OPENSEARCH_PORT: int = int(os.getenv("OPENSEARCH_PORT", "443"))
-    OPENSEARCH_USERNAME: str = os.getenv("OPENSEARCH_USERNAME", "")
-    OPENSEARCH_PASSWORD: str = os.getenv("OPENSEARCH_PASSWORD", "")
-    REGION: str = os.getenv("AWS_REGION", "")
+    OPENAI_API_KEY: str = st.secrets["OPENAI_API_KEY"]
+    OPENSEARCH_HOST: str = st.secrets["OPENSEARCH_HOST"]
+    OPENSEARCH_PORT: int = int(st.secrets["OPENSEARCH_PORT"])
+    OPENSEARCH_USERNAME: str = st.secrets["OPENSEARCH_USER"]
+    OPENSEARCH_PASSWORD: str = st.secrets["OPENSEARCH_PASSWORD"]
+    REGION: str = st.secrets["AWS_REGION"]
     # Model Settings
     MODEL_NAME: str = "gpt-4o-mini"
+    TEMPERATURE: float = 0.7
+    MAX_TOKENS: int = 1000
     EMBEDDING_MODEL: str = "text-embedding-3-small"
-    
     # Thresholds
-    CONFIDENCE_THRESHOLD: float = 0.7
+    CONFIDENCE_THRESHOLD: float = 0.5
     SIMILARITY_THRESHOLD: float = 0.8
     MAX_RETRIES: int = 3
     
@@ -35,6 +37,14 @@ class Settings(BaseSettings):
     
     # Memory Settings
     MEMORY_PERSISTENCE_PATH: Path = Path("data/memory.json")
+    
+    # LangChain Configuration
+    LANGCHAIN_TRACING_V2: bool = "true"
+    LANGCHAIN_TRACING: bool = "true"
+    
+    LANGCHAIN_ENDPOINT: str = st.secrets["LANGCHAIN_ENDPOINT"]
+    LANGCHAIN_API_KEY: str = st.secrets["LANGCHAIN_API_KEY"]
+    LANGCHAIN_PROJECT: str = st.secrets["LANGCHAIN_PROJECT"]
     
     # Agent Prompts
     AGENT_PROMPTS: Dict[str, str] = {

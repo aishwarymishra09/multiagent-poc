@@ -5,7 +5,12 @@ from agents.service_agent import ServiceAgent
 from intent_classifier.router import IntentClassifier
 from intent_classifier.ambiguous_handler import AmbiguousIntentHandler
 import asyncio
-
+import os
+os.environ["LANGCHAIN_TRACING_V2"] = str(st.secrets["LANGSMITH_TRACING"]).lower()
+print(os.environ["LANGCHAIN_TRACING_V2"])
+os.environ["LANGCHAIN_ENDPOINT"] = st.secrets["LANGSMITH_ENDPOINT"]
+os.environ["LANGCHAIN_API_KEY"] = st.secrets["LANGSMITH_API_KEY"]
+os.environ["LANGCHAIN_PROJECT"] = st.secrets["LANGSMITH_PROJECT"]
 # Initialize session state for chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
